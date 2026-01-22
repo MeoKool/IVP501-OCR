@@ -1,8 +1,11 @@
+import { useState } from "react"
+import { ChevronDown, Settings } from "lucide-react"
 import type { OcrSettings } from "@/types/ocr"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
+import { cn } from "@/lib/utils"
 
 interface OcrSettingsProps {
   settings: OcrSettings
@@ -15,6 +18,8 @@ export function OcrSettingsComponent({
   onSettingsChange,
   disabled,
 }: OcrSettingsProps) {
+  const [isOpen, setIsOpen] = useState(false)
+
   const updateSetting = <K extends keyof OcrSettings>(
     key: K,
     value: OcrSettings[K]
@@ -23,10 +28,26 @@ export function OcrSettingsComponent({
   }
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
-      <h3 className="text-sm font-medium">OCR Settings</h3>
-
-      <div className="space-y-2">
+    <div className="space-y-4 rounded-lg border bg-card/50 shadow-sm">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={disabled}
+        className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-muted/50 disabled:cursor-not-allowed"
+      >
+        <div className="flex items-center gap-2">
+          <Settings className="h-4 w-4 text-muted-foreground" />
+          <h3 className="text-sm font-medium">OCR Settings</h3>
+        </div>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-muted-foreground transition-transform",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
+      {isOpen && (
+        <div className="space-y-4 border-t p-4 pt-4">
+          <div className="space-y-2">
         <Label htmlFor="language">Language</Label>
         <Select
           id="language"
@@ -111,7 +132,9 @@ export function OcrSettingsComponent({
           disabled={disabled}
           className="w-full"
         />
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

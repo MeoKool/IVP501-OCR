@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils"
 interface ImagePreviewProps {
   imageUrl: string
   disabled?: boolean
+  isScanning?: boolean
 }
 
-export function ImagePreview({ imageUrl, disabled }: ImagePreviewProps) {
+export function ImagePreview({ imageUrl, disabled, isScanning = false }: ImagePreviewProps) {
   const [zoom, setZoom] = useState(1)
   const [fit, setFit] = useState(true)
 
@@ -61,7 +62,7 @@ export function ImagePreview({ imageUrl, disabled }: ImagePreviewProps) {
           </Button>
         </div>
       </div>
-      <div className="relative overflow-hidden rounded-lg border bg-muted/50">
+      <div className="relative overflow-hidden rounded-lg border bg-muted/50 shadow-lg">
         <div
           className="flex items-center justify-center overflow-auto p-4"
           style={{ minHeight: "300px", maxHeight: "500px" }}
@@ -70,8 +71,9 @@ export function ImagePreview({ imageUrl, disabled }: ImagePreviewProps) {
             src={imageUrl}
             alt="Preview"
             className={cn(
-              "transition-transform",
-              fit ? "max-w-full max-h-full object-contain" : ""
+              "transition-transform duration-300",
+              fit ? "max-w-full max-h-full object-contain" : "",
+              isScanning && "brightness-95"
             )}
             style={
               !fit
@@ -82,10 +84,25 @@ export function ImagePreview({ imageUrl, disabled }: ImagePreviewProps) {
                 : undefined
             }
           />
+          {/* Scan line animation */}
+          {isScanning && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_20px_rgba(59,130,246,0.8)] animate-scan" />
+            </div>
+          )}
+          {/* Scanning overlay effect */}
+          {isScanning && (
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 animate-pulse" />
+          )}
         </div>
         {!fit && (
-          <div className="absolute bottom-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
+          <div className="absolute bottom-2 right-2 rounded-lg bg-black/70 backdrop-blur-sm px-2 py-1 text-xs text-white shadow-lg">
             {Math.round(zoom * 100)}%
+          </div>
+        )}
+        {isScanning && (
+          <div className="absolute top-2 left-2 rounded-lg bg-primary/90 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-lg animate-pulse">
+            Scanning...
           </div>
         )}
       </div>
