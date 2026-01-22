@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+@theme {
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(9% 0 0);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(9% 0 0);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(9% 0 0);
+  --color-primary: oklch(50% 0.2 250);
+  --color-primary-foreground: oklch(100% 0 0);
+  --color-secondary: oklch(98% 0 0);
+  --color-secondary-foreground: oklch(9% 0 0);
+  --color-muted: oklch(98% 0 0);
+  --color-muted-foreground: oklch(45% 0 0);
+  --color-accent: oklch(98% 0 0);
+  --color-accent-foreground: oklch(9% 0 0);
+  --color-destructive: oklch(62% 0.2 25);
+  --color-destructive-foreground: oklch(100% 0 0);
+  --color-border: oklch(85% 0 0);
+  --color-input: oklch(98% 0 0);
+  --color-ring: oklch(50% 0.2 250);
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
