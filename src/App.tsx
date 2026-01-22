@@ -1,13 +1,19 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { ToastProvider } from "@/components/ui/toast"
+import { Toaster } from "@/components/ui/toaster"
+import { OcrPage } from "@/pages/OcrPage"
 
 function App() {
-
   return (
-    <>
-      <h1 className="text-3xl font-bold">
-        Hello world!
-      </h1>
-
-    </>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/ocr" replace />} />
+          <Route path="/ocr" element={<OcrPage />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster />
+    </ToastProvider>
   )
 }
 
