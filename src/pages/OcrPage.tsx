@@ -2,7 +2,7 @@ import { useState, useCallback } from "react"
 import { Scan, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { useMockOcr } from "@/hooks/useMockOcr"
+import { useOcr } from "@/hooks/useOcr"
 import type { OcrSettings } from "@/types/ocr"
 import { UploadCard } from "@/components/ocr/UploadCard"
 import { ImagePreview } from "@/components/ocr/ImagePreview"
@@ -32,7 +32,7 @@ export function OcrPage() {
         error,
         processImage,
         reset,
-    } = useMockOcr()
+    } = useOcr()
 
     const handleImageSelect = useCallback((file: File) => {
         setSelectedImage(file)
@@ -54,7 +54,7 @@ export function OcrPage() {
         if (!selectedImage) return
 
         try {
-            await processImage(settings)
+            await processImage(selectedImage, settings)
             toast({
                 title: "Success",
                 description: "OCR processing completed successfully",
@@ -80,10 +80,10 @@ export function OcrPage() {
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="mb-8">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg transition-transform hover:scale-105">
-                                <Scan className="h-6 w-6" />
-                            </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg transition-transform hover:scale-105">
+                            <Scan className="h-6 w-6" />
+                        </div>
                         <div>
                             <h1 className="text-3xl font-bold">Handwritten OCR</h1>
                             <p className="text-sm text-muted-foreground">
@@ -118,15 +118,15 @@ export function OcrPage() {
                                             size="lg"
                                         >
                                             {isProcessing ? (
-                                              <span className="flex items-center gap-2">
-                                                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                                                Processing...
-                                              </span>
+                                                <span className="flex items-center gap-2">
+                                                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                                                    Processing...
+                                                </span>
                                             ) : (
-                                              <>
-                                                <Scan className="mr-2 h-4 w-4" />
-                                                Recognize
-                                              </>
+                                                <>
+                                                    <Scan className="mr-2 h-4 w-4" />
+                                                    Recognize
+                                                </>
                                             )}
                                         </Button>
                                         <Button
@@ -142,10 +142,10 @@ export function OcrPage() {
                                     </div>
 
                                     <div className="my-6">
-                                        <ImagePreview 
-                                          imageUrl={imageUrl} 
-                                          disabled={isProcessing}
-                                          isScanning={isProcessing}
+                                        <ImagePreview
+                                            imageUrl={imageUrl}
+                                            disabled={isProcessing}
+                                            isScanning={isProcessing}
                                         />
                                     </div>
 
@@ -159,11 +159,11 @@ export function OcrPage() {
                                         <div className="mt-4 space-y-3 rounded-lg border bg-gradient-to-r from-primary/5 to-primary/10 p-4 shadow-lg">
                                             <div className="flex items-center justify-between text-sm font-medium">
                                                 <span className="flex items-center gap-2">
-                                                  <span className="relative flex h-2 w-2">
-                                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
-                                                  </span>
-                                                  Processing...
+                                                    <span className="relative flex h-2 w-2">
+                                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+                                                    </span>
+                                                    Processing...
                                                 </span>
                                                 <span className="font-semibold text-primary">{progress}%</span>
                                             </div>
@@ -199,24 +199,23 @@ export function OcrPage() {
                                 result={result}
                                 isLoading={isProcessing}
                             />
-            </div>
-          </div>
-        </div>
+                        </div>
+                    </div>
+                </div>
 
-        {/* Floating Action Button - Mobile friendly */}
-        {imageUrl && !isProcessing && (
-          <div className="fixed bottom-6 right-6 z-50 lg:hidden">
-            <Button
-              onClick={handleRecognize}
-              disabled={!selectedImage}
-              size="lg"
-              className="h-14 w-14 rounded-full shadow-2xl transition-all hover:scale-110 hover:shadow-3xl active:scale-95"
-            >
-              <Scan className="h-6 w-6" />
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
-  )
+                {imageUrl && !isProcessing && (
+                    <div className="fixed bottom-6 right-6 z-50 lg:hidden">
+                        <Button
+                            onClick={handleRecognize}
+                            disabled={!selectedImage}
+                            size="lg"
+                            className="h-14 w-14 rounded-full shadow-2xl transition-all hover:scale-110 hover:shadow-3xl active:scale-95"
+                        >
+                            <Scan className="h-6 w-6" />
+                        </Button>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
 }

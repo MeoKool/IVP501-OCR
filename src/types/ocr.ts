@@ -40,3 +40,42 @@ export interface OcrSettings {
     binarize: boolean
     confidenceThreshold: number
 }
+
+export type ApiBoundingBox = [number, number][]
+
+export interface ApiDetailedResult {
+    text: string
+    confidence: number
+    bounding_box: ApiBoundingBox
+    line_number: number
+}
+
+export interface ApiTimings {
+    total_ms: number
+    image_preprocessing_ms: number
+    ocr_inference_ms: number
+    text_postprocessing_ms: number
+}
+
+export interface ApiModelInfo {
+    engine: string
+    version: string
+    language: string
+    use_custom_model: boolean
+    use_gpu: boolean
+    use_angle_cls: boolean
+    initialized: boolean
+}
+
+export interface ApiOcrResponse {
+    success: boolean
+    extracted_text: string
+    filename: string
+    file_size_mb: number
+    confidence: number
+    num_detections: number
+    timings: ApiTimings
+    detailed_results: ApiDetailedResult[]
+    model_info: ApiModelInfo
+    message: string
+}

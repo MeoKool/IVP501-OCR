@@ -21,13 +21,26 @@ export function UploadCard({
   const [error, setError] = useState<string | null>(null)
 
   const validateFile = (file: File): boolean => {
-    const validTypes = ["image/png", "image/jpeg", "image/jpg"]
-    if (!validTypes.includes(file.type)) {
-      setError("Chỉ chấp nhận file PNG hoặc JPG")
+    const validTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+      "image/bmp",
+      "image/tiff",
+      "image/webp",
+    ]
+
+    const validExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".tif", ".webp"]
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf("."))
+
+    if (!validTypes.includes(file.type) && !validExtensions.includes(fileExtension)) {
+      setError("Only PNG, JPG, JPEG, GIF, BMP, TIFF, or WEBP files are accepted")
       return false
     }
-    if (file.size > 10 * 1024 * 1024) {
-      setError("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB")
+
+    if (file.size > 20 * 1024 * 1024) {
+      setError("File is too large. Please select a file smaller than 20MB")
       return false
     }
     setError(null)
@@ -109,22 +122,22 @@ export function UploadCard({
                 type="file"
                 id="file-upload"
                 className="hidden"
-                accept="image/png,image/jpeg,image/jpg"
+                accept="image/png,image/jpeg,image/jpg,image/gif,image/bmp,image/tiff,image/webp"
                 onChange={handleChange}
                 disabled={disabled}
               />
               <FileImage className="mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-2 text-sm font-medium">
-                Kéo thả ảnh vào đây hoặc{" "}
+                Drag and drop an image here or{" "}
                 <label
                   htmlFor="file-upload"
                   className="cursor-pointer text-primary hover:underline"
                 >
-                  chọn file
+                  select a file
                 </label>
               </p>
               <p className="text-xs text-muted-foreground">
-                PNG, JPG tối đa 10MB
+                PNG, JPG, JPEG, GIF, BMP, TIFF, WEBP up to 20MB
               </p>
               {error && (
                 <p className="mt-2 text-sm text-destructive">{error}</p>
@@ -159,7 +172,7 @@ export function UploadCard({
           <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted-foreground/25 p-12">
             <Camera className="mb-4 h-12 w-12 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Tính năng Camera/Scan đang được phát triển
+              Camera/Scan feature is under development
             </p>
           </div>
         </TabsContent>
