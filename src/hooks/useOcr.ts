@@ -37,7 +37,7 @@ function transformBoundingBox(bbox: number[][]): { x: number; y: number; w: numb
   return { x, y, w, h }
 }
 
-function transformApiResponse(apiResponse: ApiOcrResponse, settings: OcrSettings): OcrResult {
+function transformApiResponse(apiResponse: ApiOcrResponse): OcrResult {
   const lines = apiResponse.detailed_results.map((detail) => {
     const bbox = transformBoundingBox(detail.bounding_box)
 
@@ -122,7 +122,7 @@ export function useOcr(): UseOcrReturn {
         throw new Error(apiResponse.message || "OCR processing failed")
       }
 
-      const transformedResult = transformApiResponse(apiResponse, settings)
+      const transformedResult = transformApiResponse(apiResponse)
       setResult(transformedResult)
     } catch (err) {
       if (axios.isAxiosError(err)) {
