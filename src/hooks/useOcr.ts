@@ -13,12 +13,22 @@ interface UseOcrReturn {
 
 const API_BASE_URL = "http://localhost:8000"
 
-function transformBoundingBox(bbox: number[][]): { x: number; y: number; w: number; h: number } {
-  if (!bbox || bbox.length !== 4) {
+function transformBoundingBox(bbox: number[][] | { points: [number, number][] }): { x: number; y: number; w: number; h: number } {
+  let points: number[][]
+  
+  if ('points' in bbox && Array.isArray(bbox.points)) {
+    points = bbox.points
+  } else if (Array.isArray(bbox)) {
+    points = bbox
+  } else {
     return { x: 0, y: 0, w: 0, h: 0 }
   }
 
-  const validPoints = bbox.filter(
+  if (!points || points.length !== 4) {
+    return { x: 0, y: 0, w: 0, h: 0 }
+  }
+
+  const validPoints = points.filter(
     (point) => Array.isArray(point) && point.length >= 2 && typeof point[0] === "number" && typeof point[1] === "number"
   )
 
@@ -82,6 +92,12 @@ function transformApiResponse(apiResponse: ApiOcrResponse): OcrResult {
       confidence: apiResponse.confidence,
       filename: apiResponse.filename,
       fileSizeMB: apiResponse.file_size_mb,
+      histogram: apiResponse.histogram ? {
+        bins: apiResponse.histogram.bins,
+        mean: apiResponse.histogram.mean,
+        std: apiResponse.histogram.std,
+        qualityHint: apiResponse.histogram.quality_hint,
+      } : undefined,
     },
   }
 }

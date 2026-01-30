@@ -9,6 +9,7 @@ import { ImagePreview } from "@/components/ocr/ImagePreview"
 import { ProcessedImagePreview } from "@/components/ocr/ProcessedImagePreview"
 import { OcrSettingsComponent } from "@/components/ocr/OcrSettings"
 import { ResultPanel } from "@/components/ocr/ResultPanel"
+import { HistogramChart } from "@/components/ocr/HistogramChart"
 import { useToast } from "@/components/ui/toast"
 
 const defaultSettings: OcrSettings = {
@@ -271,6 +272,13 @@ export function OcrPage() {
                                         disabled={false}
                                     />
                                 </div>
+                                
+                                {/* Histogram Chart */}
+                                {result.meta.histogram && (
+                                    <div className="rounded-2xl border bg-card p-6 shadow-lg transition-shadow hover:shadow-xl">
+                                        <HistogramChart histogram={result.meta.histogram} />
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-6">

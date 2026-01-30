@@ -18,6 +18,13 @@ export interface Line {
     words: Word[]
 }
 
+export interface Histogram {
+    bins: number[]
+    mean: number
+    std: number
+    qualityHint: string
+}
+
 export interface OcrMeta {
     processingMs: number
     language: string
@@ -28,6 +35,7 @@ export interface OcrMeta {
     confidence: number
     filename: string
     fileSizeMB: number
+    histogram?: Histogram
 }
 
 export interface OcrResult {
@@ -45,7 +53,7 @@ export type ApiBoundingBox = [number, number][]
 export interface ApiDetailedResult {
     text: string
     confidence: number
-    bounding_box: ApiBoundingBox
+    bounding_box: ApiBoundingBox | { points: [number, number][] }
     line_number: number
 }
 
@@ -66,6 +74,13 @@ export interface ApiModelInfo {
     initialized: boolean
 }
 
+export interface ApiHistogram {
+    bins: number[]
+    mean: number
+    std: number
+    quality_hint: string
+}
+
 export interface ApiOcrResponse {
     success: boolean
     extracted_text: string
@@ -75,6 +90,7 @@ export interface ApiOcrResponse {
     num_detections: number
     timings: ApiTimings
     detailed_results: ApiDetailedResult[]
+    histogram?: ApiHistogram
     model_info: ApiModelInfo
     message: string
 }
