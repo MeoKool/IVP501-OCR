@@ -11,12 +11,7 @@ import { ResultPanel } from "@/components/ocr/ResultPanel"
 import { useToast } from "@/components/ui/toast"
 
 const defaultSettings: OcrSettings = {
-    language: "English",
-    model: "CNN+LSTM (default)",
-    autoRotate: false,
-    denoise: true,
-    binarize: false,
-    confidenceThreshold: 0.5,
+    language: "en",
 }
 
 export function OcrPage() {

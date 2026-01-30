@@ -77,7 +77,7 @@ function transformApiResponse(apiResponse: ApiOcrResponse, settings: OcrSettings
       language: apiResponse.model_info.language,
       model: apiResponse.model_info.engine,
       rotated: apiResponse.model_info.use_angle_cls,
-      denoised: settings.denoise,
+      denoised: false,
     },
   }
 }
@@ -97,6 +97,7 @@ export function useOcr(): UseOcrReturn {
     try {
       const formData = new FormData()
       formData.append("file", file)
+      formData.append("lang", settings.language)
 
       const apiResponse: ApiOcrResponse = await axios.post(
         `${API_BASE_URL}/ocr/upload`,

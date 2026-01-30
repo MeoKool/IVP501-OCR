@@ -34,11 +34,6 @@ export interface OcrResult {
 
 export interface OcrSettings {
     language: string
-    model: string
-    autoRotate: boolean
-    denoise: boolean
-    binarize: boolean
-    confidenceThreshold: number
 }
 
 export type ApiBoundingBox = [number, number][]

@@ -65,9 +65,6 @@ export function useMockOcr(): UseMockOcrReturn {
         meta: {
           ...selectedResult.meta,
           language: settings.language,
-          model: settings.model,
-          rotated: settings.autoRotate,
-          denoised: settings.denoise,
         },
       }
 
