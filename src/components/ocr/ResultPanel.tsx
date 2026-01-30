@@ -134,6 +134,24 @@ export function ResultPanel({
             </Badge>
           </div>
           <div>
+            <p className="text-xs text-muted-foreground">Num Detections</p>
+            <p className="text-lg font-semibold">{result.meta.numDetections}</p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Confidence Score</p>
+            <Badge
+              variant={
+                result.meta.confidence >= 0.9
+                  ? "default"
+                  : result.meta.confidence >= 0.75
+                  ? "secondary"
+                  : "destructive"
+              }
+            >
+              {(result.meta.confidence * 100).toFixed(1)}%
+            </Badge>
+          </div>
+          <div>
             <p className="text-xs text-muted-foreground">Processing Time</p>
             <p className="text-lg font-semibold">
               {(result.meta.processingMs / 1000).toFixed(2)}s

@@ -78,6 +78,10 @@ function transformApiResponse(apiResponse: ApiOcrResponse): OcrResult {
       model: apiResponse.model_info.engine,
       rotated: apiResponse.model_info.use_angle_cls,
       denoised: false,
+      numDetections: apiResponse.num_detections,
+      confidence: apiResponse.confidence,
+      filename: apiResponse.filename,
+      fileSizeMB: apiResponse.file_size_mb,
     },
   }
 }
@@ -105,7 +109,6 @@ export function useOcr(): UseOcrReturn {
         {
           onUploadProgress: (progressEvent: { loaded: number; total?: number }) => {
             if (progressEvent.total) {
-              // Track upload progress up to 90%, remaining 10% for processing
               const percentCompleted = Math.round(
                 (progressEvent.loaded * 90) / progressEvent.total
               )

@@ -24,6 +24,10 @@ export interface OcrMeta {
     model: string
     rotated: boolean
     denoised: boolean
+    numDetections: number
+    confidence: number
+    filename: string
+    fileSizeMB: number
 }
 
 export interface OcrResult {

@@ -2,47 +2,34 @@ import { useState, useEffect } from "react"
 import { ZoomIn, ZoomOut, Maximize2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { OcrResult } from "@/types/ocr"
 
-interface ImageInfo {
-  width: number
-  height: number
-  format: string
-  sizeMB: number
-}
-
-interface ImagePreviewProps {
+interface ProcessedImagePreviewProps {
   imageUrl: string
-  file?: File | null
+  result: OcrResult | null
   disabled?: boolean
-  isScanning?: boolean
-  title?: string
 }
 
-export function ImagePreview({ 
-  imageUrl, 
-  file, 
-  disabled, 
-  isScanning = false,
-  title = "Image Preview"
-}: ImagePreviewProps) {
+export function ProcessedImagePreview({
+  imageUrl,
+  result,
+  disabled
+}: ProcessedImagePreviewProps) {
   const [zoom, setZoom] = useState(1)
   const [fit, setFit] = useState(true)
-  const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null)
+  const [imageInfo, setImageInfo] = useState<{ width: number; height: number } | null>(null)
   const [showInfo, setShowInfo] = useState(false)
 
   useEffect(() => {
     const img = new Image()
     img.onload = () => {
-      const format = file?.type?.split('/')[1]?.toUpperCase() || imageUrl.split('.').pop()?.toUpperCase() || 'UNKNOWN'
       setImageInfo({
         width: img.naturalWidth,
-        height: img.naturalHeight,
-        format: format,
-        sizeMB: file ? file.size / (1024 * 1024) : 0
+        height: img.naturalHeight
       })
     }
     img.src = imageUrl
-  }, [imageUrl, file])
+  }, [imageUrl])
 
   const handleZoomIn = () => {
     setZoom((prev) => Math.min(prev + 0.25, 3))
@@ -59,11 +46,15 @@ export function ImagePreview({
     setZoom(1)
   }
 
+  if (!result) {
+    return null
+  }
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium">{title}</h3>
+          <h3 className="text-sm font-medium">Processed Image</h3>
           {imageInfo && (
             <Button
               variant="ghost"
@@ -113,40 +104,24 @@ export function ImagePreview({
         >
           <img
             src={imageUrl}
-            alt="Preview"
+            alt="Processed Preview"
             className={cn(
               "transition-transform duration-300",
-              fit ? "max-w-full max-h-full object-contain" : "",
-              isScanning && "brightness-95"
+              fit ? "max-w-full max-h-full object-contain" : ""
             )}
             style={
               !fit
                 ? {
-                    transform: `scale(${zoom})`,
-                    transformOrigin: "center",
-                  }
+                  transform: `scale(${zoom})`,
+                  transformOrigin: "center",
+                }
                 : undefined
             }
           />
-          {/* Scan line animation */}
-          {isScanning && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_20px_rgba(59,130,246,0.8)] animate-scan" />
-            </div>
-          )}
-          {/* Scanning overlay effect */}
-          {isScanning && (
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 animate-pulse" />
-          )}
         </div>
         {!fit && (
           <div className="absolute bottom-2 right-2 rounded-lg bg-black/70 backdrop-blur-sm px-2 py-1 text-xs text-white shadow-lg">
             {Math.round(zoom * 100)}%
-          </div>
-        )}
-        {isScanning && (
-          <div className="absolute top-2 left-2 rounded-lg bg-primary/90 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-lg animate-pulse">
-            Scanning...
           </div>
         )}
       </div>
@@ -158,15 +133,9 @@ export function ImagePreview({
               <span className="font-medium">{imageInfo.width} × {imageInfo.height} px</span>
             </div>
             <div>
-              <span className="text-muted-foreground">Format: </span>
-              <span className="font-medium">{imageInfo.format}</span>
+              <span className="text-muted-foreground">Detections: </span>
+              <span className="font-medium">{result.lines.length}</span>
             </div>
-            {imageInfo.sizeMB > 0 && (
-              <div className="col-span-2">
-                <span className="text-muted-foreground">File Size: </span>
-                <span className="font-medium">{imageInfo.sizeMB.toFixed(2)} MB</span>
-              </div>
-            )}
           </div>
         </div>
       )}
