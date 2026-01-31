@@ -10,7 +10,6 @@ A web application for recognizing and extracting text from handwritten images us
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Troubleshooting](#troubleshooting)
 
 ## System Requirements
 
