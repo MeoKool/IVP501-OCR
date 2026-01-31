@@ -25,6 +25,7 @@ export function OcrPage() {
     const [settings, setSettings] = useState<OcrSettings>(defaultSettings)
     const { toast } = useToast()
     const hasAutoSwitchedRef = useRef(false)
+    const userManuallyBackRef = useRef(false)
 
     const {
         progress,
@@ -36,15 +37,15 @@ export function OcrPage() {
     } = useOcr()
 
     useEffect(() => {
-        if (result && !isProcessing && step === 1 && !hasAutoSwitchedRef.current) {
+        if (result && !isProcessing && step === 1 && !hasAutoSwitchedRef.current && !userManuallyBackRef.current) {
             hasAutoSwitchedRef.current = true
-            // eslint-disable-next-line react-hooks/exhaustive-deps
             requestAnimationFrame(() => {
                 setStep(2)
             })
         }
         if (step === 1 && !result) {
             hasAutoSwitchedRef.current = false
+            userManuallyBackRef.current = false
         }
     }, [result, isProcessing, step])
 
@@ -55,6 +56,7 @@ export function OcrPage() {
         reset()
         setStep(1)
         hasAutoSwitchedRef.current = false
+        userManuallyBackRef.current = false
     }, [reset])
 
     const handleClear = useCallback(() => {
@@ -66,10 +68,14 @@ export function OcrPage() {
         reset()
         setStep(1)
         hasAutoSwitchedRef.current = false
+        userManuallyBackRef.current = false
     }, [imageUrl, reset])
 
     const handleRecognize = useCallback(async () => {
         if (!selectedImage) return
+
+        userManuallyBackRef.current = false
+        hasAutoSwitchedRef.current = false
 
         try {
             await processImage(selectedImage, settings)
@@ -92,9 +98,16 @@ export function OcrPage() {
     }, [selectedImage, settings, processImage, error, toast])
 
     const handleBackToStep1 = useCallback(() => {
+        setSelectedImage(null)
+        if (imageUrl) {
+            URL.revokeObjectURL(imageUrl)
+        }
+        setImageUrl(null)
+        reset()
         setStep(1)
         hasAutoSwitchedRef.current = false
-    }, [])
+        userManuallyBackRef.current = false
+    }, [imageUrl, reset])
 
     const handleRetry = useCallback(() => {
         if (selectedImage) {
@@ -272,7 +285,7 @@ export function OcrPage() {
                                         disabled={false}
                                     />
                                 </div>
-                                
+
                                 {/* Histogram Chart */}
                                 {result.meta.histogram && (
                                     <div className="rounded-2xl border bg-card p-6 shadow-lg transition-shadow hover:shadow-xl">
