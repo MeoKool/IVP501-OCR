@@ -25,8 +25,16 @@ export interface Histogram {
     qualityHint: string
 }
 
+export interface OcrTimings {
+    totalMs: number
+    imagePreprocessingMs: number
+    ocrInferenceMs: number
+    textPostprocessingMs: number
+}
+
 export interface OcrMeta {
     processingMs: number
+    timings?: OcrTimings
     language: string
     model: string
     rotated: boolean

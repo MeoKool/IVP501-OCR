@@ -84,6 +84,12 @@ function transformApiResponse(apiResponse: ApiOcrResponse): OcrResult {
     lines,
     meta: {
       processingMs: apiResponse.timings.total_ms,
+      timings: {
+        totalMs: apiResponse.timings.total_ms,
+        imagePreprocessingMs: apiResponse.timings.image_preprocessing_ms,
+        ocrInferenceMs: apiResponse.timings.ocr_inference_ms,
+        textPostprocessingMs: apiResponse.timings.text_postprocessing_ms,
+      },
       language: apiResponse.model_info.language,
       model: apiResponse.model_info.engine,
       rotated: apiResponse.model_info.use_angle_cls,

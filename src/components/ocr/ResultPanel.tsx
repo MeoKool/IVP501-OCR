@@ -160,6 +160,39 @@ export function ResultPanel({
         </div>
       </div>
 
+      {/* Processing Timings */}
+      {result.meta.timings && (
+        <div className="rounded-lg border p-4">
+          <h3 className="mb-3 text-sm font-medium">Processing Timings</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">Total Time</p>
+              <p className="text-lg font-semibold">
+                {(result.meta.timings.totalMs / 1000).toFixed(2)}s
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Image Preprocessing</p>
+              <p className="text-lg font-semibold">
+                {(result.meta.timings.imagePreprocessingMs / 1000).toFixed(2)}s
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">OCR Inference</p>
+              <p className="text-lg font-semibold">
+                {(result.meta.timings.ocrInferenceMs / 1000).toFixed(2)}s
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Text Postprocessing</p>
+              <p className="text-lg font-semibold">
+                {(result.meta.timings.textPostprocessingMs / 1000).toFixed(2)}s
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Tabs */}
       <Tabs defaultValue="plain" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
