@@ -100,6 +100,8 @@ function transformApiResponse(apiResponse: ApiOcrResponse): OcrResult {
       fileSizeMB: apiResponse.file_size_mb,
       histogram: apiResponse.histogram ? {
         bins: apiResponse.histogram.bins,
+        counts: apiResponse.histogram.counts,
+        imageBase64: apiResponse.histogram.image_base64,
         mean: apiResponse.histogram.mean,
         std: apiResponse.histogram.std,
         qualityHint: apiResponse.histogram.quality_hint,

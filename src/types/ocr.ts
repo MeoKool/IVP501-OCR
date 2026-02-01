@@ -19,7 +19,9 @@ export interface Line {
 }
 
 export interface Histogram {
-    bins: number[]
+    bins?: number[]
+    counts?: number[]
+    imageBase64?: string
     mean: number
     std: number
     qualityHint: string
@@ -83,7 +85,9 @@ export interface ApiModelInfo {
 }
 
 export interface ApiHistogram {
-    bins: number[]
+    bins?: number[]
+    counts?: number[]
+    image_base64?: string
     mean: number
     std: number
     quality_hint: string
